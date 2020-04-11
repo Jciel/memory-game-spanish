@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="public/css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;1,200&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <style>body { padding: 0; margin: 0; }</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="app" class="col-md-4"></div>
+</div>
+
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript">
+  var container = document.getElementById("app")
+  Elm.Main.init({node : container})
+</script>
+</body>
+</html>
