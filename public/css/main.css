@@ -15,7 +15,8 @@ body {
       font-size: 20px; }
       body .container .game-container .button-container .button-result.btn-success {
         color: #fff;
-        background-color: #4CAF50; }
+        background-color: #4CAF50;
+        cursor: pointer; }
       body .container .game-container .button-container .button-result.btn-wrong {
         color: #686868;
         background-color: #dcdcdc; }
@@ -23,7 +24,8 @@ body {
     display: flex;
     justify-content: center; }
     body .container .game-container .cards-container .frame-image-cards {
-      display: flex; }
+      display: flex;
+      flex-flow: wrap; }
       body .container .game-container .cards-container .frame-image-cards .image-card {
         perspective: 1000px;
         display: flex;
@@ -68,7 +70,8 @@ body {
             body .container .game-container .cards-container .frame-image-cards .image-card .flip .back .name-container {
               font-weight: bold; }
     body .container .game-container .cards-container .frame-description-cards {
-      display: flex; }
+      display: flex;
+      flex-flow: wrap; }
       body .container .game-container .cards-container .frame-description-cards .description-card {
         perspective: 1000px;
         display: flex;

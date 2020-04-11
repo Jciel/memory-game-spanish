@@ -10537,8 +10537,8 @@ var $elm$core$Basics$never = function (_v0) {
 };
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$Model = F5(
-	function (firstFlippedCard, secondFlippedCard, descriptionCards, imageCards, buttonStatus) {
-		return {buttonStatus: buttonStatus, descriptionCards: descriptionCards, firstFlippedCard: firstFlippedCard, imageCards: imageCards, secondFlippedCard: secondFlippedCard};
+	function (imageCardFlipped, descriptionCardFlipped, descriptionCards, imageCards, buttonResponse) {
+		return {buttonResponse: buttonResponse, descriptionCardFlipped: descriptionCardFlipped, descriptionCards: descriptionCards, imageCardFlipped: imageCardFlipped, imageCards: imageCards};
 	});
 var $author$project$Main$Wrong = {$: 'Wrong'};
 var $author$project$Main$DescriptionCard = F3(
@@ -10564,6 +10564,51 @@ var $author$project$Main$descriptionCards = _List_fromArray(
 		$author$project$Main$DescriptionCard,
 		3,
 		'Maneja la camioneta Y también el ruletero, Si detiene en la banqueta Y transporta el pasajero.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		4,
+		'Su maquinita hace ruido Trabajando sin parar Y me hace un lindo vestido Para poderlo estrenar.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		5,
+		'Con las manos en la masa Está en la panadería Para que no falte en casa Nuestro pan de cada día.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		6,
+		'Día y noche cuida al niño Recluido en el hospital Y lo trata con cariño Para que no se sienta mal.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		7,
+		'Con letra clara ha escrito \'a b c\' en el pizarrón, Lo copio pues necesito Aprenderme la lección.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		8,
+		'Trabajando silenciosa/o La/lo miro por todos lados; Barre, tropea la casa Y corre a hacer los mandados.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		9,
+		'Hay que usar el teodolito Para medir el terreno Construir un puente bonito Y adornarlo en el estreno.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		10,
+		'Por comer mil golosinas Y otros dulces diferentes La “doctora” me examina Para cuidarme los dientes.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		11,
+		'Mi perrito estaba triste El pobre se me enfermó Me lo inyectaron ¿ya viste? Y rápido se curó.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		12,
+		'Al quemarse un edificio Los llaman y llegan luego; Haciendo gran sacrificio Logran apagar el fuego.',
 		$author$project$Main$FlippedOut('flippedOut'))
 	]);
 var $author$project$Main$ImageCard = F4(
@@ -10574,21 +10619,75 @@ var $author$project$Main$imageCards = _List_fromArray(
 	[
 		A4(
 		$author$project$Main$ImageCard,
+		1,
+		'SALVA VIDAS',
+		'salva-vidas.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		2,
+		'BASURERO/A',
+		'basurero.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
 		3,
 		'MOTORISTA',
 		'motorista.png',
 		$author$project$Main$FlippedOut('flippedOut')),
 		A4(
 		$author$project$Main$ImageCard,
-		2,
-		'BASURERO',
-		'basurero.png',
+		4,
+		'COSTURERA/O',
+		'costurero.png',
 		$author$project$Main$FlippedOut('flippedOut')),
 		A4(
 		$author$project$Main$ImageCard,
-		1,
-		'SALVA VIDAS',
-		'salva-vidas.png',
+		5,
+		'PANADERO/A',
+		'panadero.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		6,
+		'ENFERMERO/A',
+		'enfermero.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		7,
+		'MAESTRO/A',
+		'maestro.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		8,
+		'LIMPIADOR/A',
+		'limpiador.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		9,
+		'INGENIERO/A',
+		'ingeniero.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		10,
+		'DENTISTA',
+		'dentista.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		11,
+		'VETERINARIO/A',
+		'veterinario.png',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A4(
+		$author$project$Main$ImageCard,
+		12,
+		'BOMBERO/A',
+		'bombero.png',
 		$author$project$Main$FlippedOut('flippedOut'))
 	]);
 var $author$project$Main$initialModel = A5($author$project$Main$Model, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $author$project$Main$descriptionCards, $author$project$Main$imageCards, $author$project$Main$Wrong);
@@ -10734,7 +10833,7 @@ var $author$project$Main$selectedCardUpdate = F2(
 			return _Utils_update(
 				model,
 				{
-					firstFlippedCard: $elm$core$Maybe$Just(
+					imageCardFlipped: $elm$core$Maybe$Just(
 						$author$project$Main$Image(imageCard))
 				});
 		} else {
@@ -10742,7 +10841,7 @@ var $author$project$Main$selectedCardUpdate = F2(
 			return _Utils_update(
 				model,
 				{
-					secondFlippedCard: $elm$core$Maybe$Just(
+					descriptionCardFlipped: $elm$core$Maybe$Just(
 						$author$project$Main$Description(descriptionCard))
 				});
 		}
@@ -10755,8 +10854,8 @@ var $author$project$Main$update = F2(
 				$author$project$Main$flippedCardUpdate,
 				card,
 				A2($author$project$Main$selectedCardUpdate, card, model));
-			var compara = function () {
-				var _v1 = A3($elm$core$Maybe$map2, $author$project$Main$compareCardIds, newModel.firstFlippedCard, newModel.secondFlippedCard);
+			var compareIds = function () {
+				var _v1 = A3($elm$core$Maybe$map2, $author$project$Main$compareCardIds, newModel.imageCardFlipped, newModel.descriptionCardFlipped);
 				if (_v1.$ === 'Just') {
 					var status = _v1.a;
 					return status;
@@ -10767,19 +10866,19 @@ var $author$project$Main$update = F2(
 			return _Utils_Tuple2(
 				_Utils_update(
 					newModel,
-					{buttonStatus: compara}),
+					{buttonResponse: compareIds}),
 				$elm$core$Platform$Cmd$none);
 		} else {
 			var newModel = A2(
 				$author$project$Main$removeCards,
-				model.secondFlippedCard,
-				A2($author$project$Main$removeCards, model.firstFlippedCard, model));
+				model.descriptionCardFlipped,
+				A2($author$project$Main$removeCards, model.imageCardFlipped, model));
 			return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$RemoveCards = {$: 'RemoveCards'};
-var $author$project$Main$mountButton = function (buttonStatus) {
-	if (buttonStatus.$ === 'Correct') {
+var $author$project$Main$mountButton = function (buttonResponse) {
+	if (buttonResponse.$ === 'Correct') {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -10797,7 +10896,7 @@ var $author$project$Main$mountButton = function (buttonStatus) {
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('remover!')
+							$elm$html$Html$text('Remove Cards')
 						]))
 				]));
 	} else {
@@ -10817,7 +10916,7 @@ var $author$project$Main$mountButton = function (buttonStatus) {
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('err!')
+							$elm$html$Html$text('Wrong')
 						]))
 				]));
 	}
@@ -10967,7 +11066,7 @@ var $author$project$Main$view = function (model) {
 			]),
 		_List_fromArray(
 			[
-				$author$project$Main$mountButton(model.buttonStatus),
+				$author$project$Main$mountButton(model.buttonResponse),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(

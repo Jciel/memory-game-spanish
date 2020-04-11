@@ -21,6 +21,7 @@ body {
           &.btn-success {
             color: #fff;
             background-color: #4CAF50;
+            cursor: pointer;
           }
 
           &.btn-wrong {
@@ -36,6 +37,7 @@ body {
 
         .frame-image-cards {
           display: flex;
+          flex-flow: wrap;
 
           .image-card {
             perspective: 1000px;
@@ -99,6 +101,7 @@ body {
 
         .frame-description-cards {
           display: flex;
+          flex-flow: wrap;
 
           .description-card {
             perspective: 1000px;
