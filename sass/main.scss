@@ -11,12 +11,15 @@ body {
         justify-content: center;
 
         .button-result {
-          border: none;
+          border: 13px solid #fff;
           padding: 10px 32px;
           text-align: center;
           text-decoration: none;
           display: inline-block;
           font-size: 20px;
+          position: fixed;
+          z-index: 1;
+          outline: none;
 
           &.btn-success {
             color: #fff;

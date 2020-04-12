@@ -178,7 +178,7 @@ mountButton buttonResponse =
                 [ class "button-container" ]
                 [ button
                     [ class "button-result btn-wrong" ]
-                    [ text "N" ]
+                    [ text "-" ]
                 ]
 
 
