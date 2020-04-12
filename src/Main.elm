@@ -99,7 +99,7 @@ update msg model =
                     removeCards model.imageCardFlipped model
                         |> removeCards model.descriptionCardFlipped
             in
-            ( newModel, Cmd.none )
+            ({ newModel | buttonResponse = Wrong }, Cmd.none )
 
         ShuffledImageCards shuffledList ->
             ( { model | imageCards = shuffledList }, generate ShuffledDescriptionCards (shuffle descriptionCards) )
@@ -178,7 +178,7 @@ mountButton buttonResponse =
                 [ class "button-container" ]
                 [ button
                     [ class "button-result btn-wrong" ]
-                    [ text "Wrong" ]
+                    [ text "N" ]
                 ]
 
 

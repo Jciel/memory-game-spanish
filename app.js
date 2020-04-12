@@ -11217,7 +11217,11 @@ var $author$project$Main$update = F2(
 					$author$project$Main$removeCards,
 					model.descriptionCardFlipped,
 					A2($author$project$Main$removeCards, model.imageCardFlipped, model));
-				return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						newModel,
+						{buttonResponse: $author$project$Main$Wrong}),
+					$elm$core$Platform$Cmd$none);
 			case 'ShuffledImageCards':
 				var shuffledList = msg.a;
 				return _Utils_Tuple2(
@@ -11277,7 +11281,7 @@ var $author$project$Main$mountButton = function (buttonResponse) {
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Wrong')
+							$elm$html$Html$text('N')
 						]))
 				]));
 	}
