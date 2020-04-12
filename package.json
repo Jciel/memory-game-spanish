@@ -8,6 +8,7 @@
     "run-elm-live": "elm-live src/Main.elm -- --output=app.js --debug",
     "build-css": "node-sass-chokidar sass/ -o public/css",
     "watch-css": "npm run build-css && node-sass-chokidar sass/ -o public/css --watch --recursive",
+    "build": "elm make src/Main.elm --optimize --output=app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
