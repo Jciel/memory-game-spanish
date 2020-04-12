@@ -4938,6 +4938,52 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+function _Time_now(millisToPosix)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(millisToPosix(Date.now())));
+	});
+}
+
+var _Time_setInterval = F2(function(interval, task)
+{
+	return _Scheduler_binding(function(callback)
+	{
+		var id = setInterval(function() { _Scheduler_rawSpawn(task); }, interval);
+		return function() { clearInterval(id); };
+	});
+});
+
+function _Time_here()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		callback(_Scheduler_succeed(
+			A2($elm$time$Time$customZone, -(new Date().getTimezoneOffset()), _List_Nil)
+		));
+	});
+}
+
+
+function _Time_getZoneName()
+{
+	return _Scheduler_binding(function(callback)
+	{
+		try
+		{
+			var name = $elm$time$Time$Name(Intl.DateTimeFormat().resolvedOptions().timeZone);
+		}
+		catch (e)
+		{
+			var name = $elm$time$Time$Offset(new Date().getTimezoneOffset());
+		}
+		callback(_Scheduler_succeed(name));
+	});
+}
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -10536,81 +10582,118 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F5(
-	function (imageCardFlipped, descriptionCardFlipped, descriptionCards, imageCards, buttonResponse) {
-		return {buttonResponse: buttonResponse, descriptionCardFlipped: descriptionCardFlipped, descriptionCards: descriptionCards, imageCardFlipped: imageCardFlipped, imageCards: imageCards};
+var $author$project$Main$ShuffledImageCards = function (a) {
+	return {$: 'ShuffledImageCards', a: a};
+};
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
+};
+var $elm$random$Random$Seed = F2(
+	function (a, b) {
+		return {$: 'Seed', a: a, b: b};
 	});
-var $author$project$Main$Wrong = {$: 'Wrong'};
-var $author$project$Main$DescriptionCard = F3(
-	function (id, description, flipped) {
-		return {description: description, flipped: flipped, id: id};
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$Posix = function (a) {
+	return {$: 'Posix', a: a};
+};
+var $elm$time$Time$millisToPosix = $elm$time$Time$Posix;
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0.a;
+	return millis;
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
 	});
 var $author$project$Main$FlippedOut = function (a) {
 	return {$: 'FlippedOut', a: a};
 };
-var $author$project$Main$descriptionCards = _List_fromArray(
-	[
-		A3(
-		$author$project$Main$DescriptionCard,
-		1,
-		'Es una persona muy valiente Siempre está mirando al mar Para salvar de repente Al que no sabe nadar.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		2,
-		'Se lleva entre la basura Papeles, zapatos viejos Desperdicios y procura Ir a tirarlos bien lejos.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		3,
-		'Maneja la camioneta Y también el ruletero, Si detiene en la banqueta Y transporta el pasajero.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		4,
-		'Su maquinita hace ruido Trabajando sin parar Y me hace un lindo vestido Para poderlo estrenar.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		5,
-		'Con las manos en la masa Está en la panadería Para que no falte en casa Nuestro pan de cada día.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		6,
-		'Día y noche cuida al niño Recluido en el hospital Y lo trata con cariño Para que no se sienta mal.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		7,
-		'Con letra clara ha escrito \'a b c\' en el pizarrón, Lo copio pues necesito Aprenderme la lección.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		8,
-		'Trabajando silenciosa/o La/lo miro por todos lados; Barre, tropea la casa Y corre a hacer los mandados.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		9,
-		'Hay que usar el teodolito Para medir el terreno Construir un puente bonito Y adornarlo en el estreno.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		10,
-		'Por comer mil golosinas Y otros dulces diferentes La “doctora” me examina Para cuidarme los dientes.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		11,
-		'Mi perrito estaba triste El pobre se me enfermó Me lo inyectaron ¿ya viste? Y rápido se curó.',
-		$author$project$Main$FlippedOut('flippedOut')),
-		A3(
-		$author$project$Main$DescriptionCard,
-		12,
-		'Al quemarse un edificio Los llaman y llegan luego; Haciendo gran sacrificio Logran apagar el fuego.',
-		$author$project$Main$FlippedOut('flippedOut'))
-	]);
 var $author$project$Main$ImageCard = F4(
 	function (id, name, imagePath, flipped) {
 		return {flipped: flipped, id: id, imagePath: imagePath, name: name};
@@ -10690,12 +10773,272 @@ var $author$project$Main$imageCards = _List_fromArray(
 		'bombero.png',
 		$author$project$Main$FlippedOut('flippedOut'))
 	]);
+var $author$project$Main$Model = F5(
+	function (imageCardFlipped, descriptionCardFlipped, descriptionCards, imageCards, buttonResponse) {
+		return {buttonResponse: buttonResponse, descriptionCardFlipped: descriptionCardFlipped, descriptionCards: descriptionCards, imageCardFlipped: imageCardFlipped, imageCards: imageCards};
+	});
+var $author$project$Main$Wrong = {$: 'Wrong'};
+var $author$project$Main$DescriptionCard = F3(
+	function (id, description, flipped) {
+		return {description: description, flipped: flipped, id: id};
+	});
+var $author$project$Main$descriptionCards = _List_fromArray(
+	[
+		A3(
+		$author$project$Main$DescriptionCard,
+		1,
+		'Es una persona muy valiente Siempre está mirando al mar Para salvar de repente Al que no sabe nadar.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		2,
+		'Se lleva entre la basura Papeles, zapatos viejos Desperdicios y procura Ir a tirarlos bien lejos.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		3,
+		'Maneja la camioneta Y también el ruletero, Si detiene en la banqueta Y transporta el pasajero.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		4,
+		'Su maquinita hace ruido Trabajando sin parar Y me hace un lindo vestido Para poderlo estrenar.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		5,
+		'Con las manos en la masa Está en la panadería Para que no falte en casa Nuestro pan de cada día.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		6,
+		'Día y noche cuida al niño Recluido en el hospital Y lo trata con cariño Para que no se sienta mal.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		7,
+		'Con letra clara ha escrito \'a b c\' en el pizarrón, Lo copio pues necesito Aprenderme la lección.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		8,
+		'Trabajando silenciosa/o La/lo miro por todos lados; Barre, tropea la casa Y corre a hacer los mandados.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		9,
+		'Hay que usar el teodolito Para medir el terreno Construir un puente bonito Y adornarlo en el estreno.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		10,
+		'Por comer mil golosinas Y otros dulces diferentes La “doctora” me examina Para cuidarme los dientes.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		11,
+		'Mi perrito estaba triste El pobre se me enfermó Me lo inyectaron ¿ya viste? Y rápido se curó.',
+		$author$project$Main$FlippedOut('flippedOut')),
+		A3(
+		$author$project$Main$DescriptionCard,
+		12,
+		'Al quemarse un edificio Los llaman y llegan luego; Haciendo gran sacrificio Logran apagar el fuego.',
+		$author$project$Main$FlippedOut('flippedOut'))
+	]);
 var $author$project$Main$initialModel = A5($author$project$Main$Model, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $author$project$Main$descriptionCards, $author$project$Main$imageCards, $author$project$Main$Wrong);
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$int = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v0 = (_Utils_cmp(a, b) < 0) ? _Utils_Tuple2(a, b) : _Utils_Tuple2(b, a);
+				var lo = _v0.a;
+				var hi = _v0.b;
+				var range = (hi - lo) + 1;
+				if (!((range - 1) & range)) {
+					return _Utils_Tuple2(
+						(((range - 1) & $elm$random$Random$peel(seed0)) >>> 0) + lo,
+						$elm$random$Random$next(seed0));
+				} else {
+					var threshhold = (((-range) >>> 0) % range) >>> 0;
+					var accountForBias = function (seed) {
+						accountForBias:
+						while (true) {
+							var x = $elm$random$Random$peel(seed);
+							var seedN = $elm$random$Random$next(seed);
+							if (_Utils_cmp(x, threshhold) < 0) {
+								var $temp$seed = seedN;
+								seed = $temp$seed;
+								continue accountForBias;
+							} else {
+								return _Utils_Tuple2((x % range) + lo, seedN);
+							}
+						}
+					};
+					return accountForBias(seed0);
+				}
+			});
+	});
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
+		}
+	});
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $owanturist$elm_union_find$UnionFind$findFast = F2(
+	function (id, dict) {
+		findFast:
+		while (true) {
+			var _v0 = A2($elm$core$Dict$get, id, dict);
+			if (_v0.$ === 'Nothing') {
+				return id;
+			} else {
+				var cursor = _v0.a;
+				if (_Utils_eq(id, cursor)) {
+					return id;
+				} else {
+					var $temp$id = cursor,
+						$temp$dict = dict;
+					id = $temp$id;
+					dict = $temp$dict;
+					continue findFast;
+				}
+			}
+		}
+	});
+var $owanturist$elm_union_find$UnionFind$find = F2(
+	function (id, _v0) {
+		var dict = _v0.b;
+		return A2($owanturist$elm_union_find$UnionFind$findFast, id, dict);
+	});
+var $elm$core$Array$isEmpty = function (_v0) {
+	var len = _v0.a;
+	return !len;
+};
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $owanturist$elm_union_find$UnionFind$QuickUnionPathCompression = F2(
+	function (a, b) {
+		return {$: 'QuickUnionPathCompression', a: a, b: b};
+	});
+var $owanturist$elm_union_find$UnionFind$quickUnionPathCompression = A2($owanturist$elm_union_find$UnionFind$QuickUnionPathCompression, 0, $elm$core$Dict$empty);
+var $owanturist$elm_union_find$UnionFind$findCompressed = F2(
+	function (id, dict) {
+		var _v0 = A2($elm$core$Dict$get, id, dict);
+		if (_v0.$ === 'Nothing') {
+			return _Utils_Tuple2(
+				id,
+				A3($elm$core$Dict$insert, id, id, dict));
+		} else {
+			var cursor = _v0.a;
+			if (_Utils_eq(id, cursor)) {
+				return _Utils_Tuple2(id, dict);
+			} else {
+				var _v1 = A2($owanturist$elm_union_find$UnionFind$findCompressed, cursor, dict);
+				var parent = _v1.a;
+				var nextDict = _v1.b;
+				return _Utils_Tuple2(
+					parent,
+					A3($elm$core$Dict$insert, id, parent, nextDict));
+			}
+		}
+	});
+var $owanturist$elm_union_find$UnionFind$union = F3(
+	function (left, right, _v0) {
+		var count_ = _v0.a;
+		var dict = _v0.b;
+		var _v1 = A2($owanturist$elm_union_find$UnionFind$findCompressed, left, dict);
+		var leftRoot = _v1.a;
+		var leftDict = _v1.b;
+		var _v2 = A2($owanturist$elm_union_find$UnionFind$findCompressed, right, leftDict);
+		var rightRoot = _v2.a;
+		var rightDict = _v2.b;
+		return _Utils_eq(leftRoot, rightRoot) ? A2($owanturist$elm_union_find$UnionFind$QuickUnionPathCompression, count_, rightDict) : A2(
+			$owanturist$elm_union_find$UnionFind$QuickUnionPathCompression,
+			count_ + 1,
+			A3($elm$core$Dict$insert, leftRoot, rightRoot, rightDict));
+	});
+var $elm_community$random_extra$Utils$selectUniqByIndexes = F2(
+	function (values, randomIndexes) {
+		var modByLength = $elm$core$Basics$modBy(
+			$elm$core$Array$length(values));
+		var step = F2(
+			function (randomIndex, _v1) {
+				var uf = _v1.a;
+				var acc = _v1.b;
+				var leaderOfElement = A2($owanturist$elm_union_find$UnionFind$find, randomIndex, uf);
+				var leaderOfNextElement = A2(
+					$owanturist$elm_union_find$UnionFind$find,
+					modByLength(leaderOfElement + 1),
+					uf);
+				var _v0 = A2($elm$core$Array$get, leaderOfElement, values);
+				if (_v0.$ === 'Nothing') {
+					return _Utils_Tuple2(uf, acc);
+				} else {
+					var value = _v0.a;
+					return _Utils_Tuple2(
+						A3($owanturist$elm_union_find$UnionFind$union, leaderOfElement, leaderOfNextElement, uf),
+						A2($elm$core$List$cons, value, acc));
+				}
+			});
+		return $elm$core$Array$isEmpty(values) ? _List_Nil : A3(
+			$elm$core$List$foldr,
+			step,
+			_Utils_Tuple2($owanturist$elm_union_find$UnionFind$quickUnionPathCompression, _List_Nil),
+			randomIndexes).b;
+	});
+var $elm_community$random_extra$Random$List$shuffle = function (list) {
+	var values = $elm$core$Array$fromList(list);
+	var length = $elm$core$Array$length(values);
+	return A2(
+		$elm$random$Random$map,
+		$elm_community$random_extra$Utils$selectUniqByIndexes(values),
+		A2(
+			$elm$random$Random$list,
+			length,
+			A2($elm$random$Random$int, 0, length - 1)));
+};
 var $author$project$Main$init = function (flags) {
-	return _Utils_Tuple2($author$project$Main$initialModel, $elm$core$Platform$Cmd$none);
+	return _Utils_Tuple2(
+		$author$project$Main$initialModel,
+		A2(
+			$elm$random$Random$generate,
+			$author$project$Main$ShuffledImageCards,
+			$elm_community$random_extra$Random$List$shuffle($author$project$Main$imageCards)));
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$ShuffledDescriptionCards = function (a) {
+	return {$: 'ShuffledDescriptionCards', a: a};
+};
 var $author$project$Main$Correct = {$: 'Correct'};
 var $author$project$Main$getCardId = function (card) {
 	if (card.$ === 'Image') {
@@ -10848,32 +11191,50 @@ var $author$project$Main$selectedCardUpdate = F2(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'FlipCard') {
-			var card = msg.a;
-			var newModel = A2(
-				$author$project$Main$flippedCardUpdate,
-				card,
-				A2($author$project$Main$selectedCardUpdate, card, model));
-			var compareIds = function () {
-				var _v1 = A3($elm$core$Maybe$map2, $author$project$Main$compareCardIds, newModel.imageCardFlipped, newModel.descriptionCardFlipped);
-				if (_v1.$ === 'Just') {
-					var status = _v1.a;
-					return status;
-				} else {
-					return $author$project$Main$Wrong;
-				}
-			}();
-			return _Utils_Tuple2(
-				_Utils_update(
-					newModel,
-					{buttonResponse: compareIds}),
-				$elm$core$Platform$Cmd$none);
-		} else {
-			var newModel = A2(
-				$author$project$Main$removeCards,
-				model.descriptionCardFlipped,
-				A2($author$project$Main$removeCards, model.imageCardFlipped, model));
-			return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 'FlipCard':
+				var card = msg.a;
+				var newModel = A2(
+					$author$project$Main$flippedCardUpdate,
+					card,
+					A2($author$project$Main$selectedCardUpdate, card, model));
+				var compareIds = function () {
+					var _v1 = A3($elm$core$Maybe$map2, $author$project$Main$compareCardIds, newModel.imageCardFlipped, newModel.descriptionCardFlipped);
+					if (_v1.$ === 'Just') {
+						var status = _v1.a;
+						return status;
+					} else {
+						return $author$project$Main$Wrong;
+					}
+				}();
+				return _Utils_Tuple2(
+					_Utils_update(
+						newModel,
+						{buttonResponse: compareIds}),
+					$elm$core$Platform$Cmd$none);
+			case 'RemoveCards':
+				var newModel = A2(
+					$author$project$Main$removeCards,
+					model.descriptionCardFlipped,
+					A2($author$project$Main$removeCards, model.imageCardFlipped, model));
+				return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
+			case 'ShuffledImageCards':
+				var shuffledList = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{imageCards: shuffledList}),
+					A2(
+						$elm$random$Random$generate,
+						$author$project$Main$ShuffledDescriptionCards,
+						$elm_community$random_extra$Random$List$shuffle($author$project$Main$descriptionCards)));
+			default:
+				var shuffledList = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{descriptionCards: shuffledList}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $author$project$Main$RemoveCards = {$: 'RemoveCards'};
@@ -11102,4 +11463,4 @@ var $author$project$Main$main = $elm$browser$Browser$element(
 		view: $author$project$Main$view
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.DescriptionCard":{"args":[],"type":"{ id : Basics.Int, description : String.String, flipped : Main.CardStatus }"},"Main.ImageCard":{"args":[],"type":"{ id : Basics.Int, name : String.String, imagePath : String.String, flipped : Main.CardStatus }"}},"unions":{"Main.Msg":{"args":[],"tags":{"FlipCard":["Main.Card"],"RemoveCards":[]}},"Main.Card":{"args":[],"tags":{"Description":["Main.DescriptionCard"],"Image":["Main.ImageCard"]}},"Main.CardStatus":{"args":[],"tags":{"FlippedIn":["String.String"],"FlippedOut":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.DescriptionCard":{"args":[],"type":"{ id : Basics.Int, description : String.String, flipped : Main.CardStatus }"},"Main.ImageCard":{"args":[],"type":"{ id : Basics.Int, name : String.String, imagePath : String.String, flipped : Main.CardStatus }"}},"unions":{"Main.Msg":{"args":[],"tags":{"FlipCard":["Main.Card"],"RemoveCards":[],"ShuffledImageCards":["List.List Main.ImageCard"],"ShuffledDescriptionCards":["List.List Main.DescriptionCard"]}},"Main.Card":{"args":[],"tags":{"Description":["Main.DescriptionCard"],"Image":["Main.ImageCard"]}},"Main.CardStatus":{"args":[],"tags":{"FlippedIn":["String.String"],"FlippedOut":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));

@@ -5,6 +5,8 @@ import Html exposing (button, div, img, span, text)
 import Html.Attributes exposing (class, src)
 import Html.Events exposing (onClick)
 import List exposing (..)
+import Random exposing (generate)
+import Random.List exposing (shuffle)
 
 
 type CardStatus
@@ -49,6 +51,8 @@ type alias Model =
 type Msg
     = FlipCard Card
     | RemoveCards
+    | ShuffledImageCards (List ImageCard)
+    | ShuffledDescriptionCards (List DescriptionCard)
 
 
 initialModel : Model
@@ -56,9 +60,9 @@ initialModel =
     Model Nothing Nothing descriptionCards imageCards Wrong
 
 
-init : () -> ( Model, Cmd msg )
+init : () -> ( Model, Cmd Msg )
 init flags =
-    ( initialModel, Cmd.none )
+    ( initialModel, generate ShuffledImageCards (shuffle imageCards) )
 
 
 main =
@@ -96,6 +100,12 @@ update msg model =
                         |> removeCards model.descriptionCardFlipped
             in
             ( newModel, Cmd.none )
+
+        ShuffledImageCards shuffledList ->
+            ( { model | imageCards = shuffledList }, generate ShuffledDescriptionCards (shuffle descriptionCards) )
+
+        ShuffledDescriptionCards shuffledList ->
+            ( { model | descriptionCards = shuffledList }, Cmd.none )
 
 
 view model =
