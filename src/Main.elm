@@ -132,7 +132,7 @@ mountImageCard imageCard =
             [ class "flip" ]
             [ div
                 [ class "front" ]
-                [ span [ class "back-detail" ] [] ]
+                []
             , div
                 [ class "back" ]
                 [ img
@@ -154,7 +154,7 @@ mountDescriptionCard descriptionCard =
             [ class "flip" ]
             [ div
                 [ class "text-container front" ]
-                [ span [ class "back-detail" ] [] ]
+                []
             , div
                 [ class "back" ]
                 [ text descriptionCard.description ]
