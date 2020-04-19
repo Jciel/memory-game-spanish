@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Browser exposing (element)
-import Html exposing (button, div, img, span, text)
-import Html.Attributes exposing (class, src)
+import Html exposing (a, button, div, img, span, text)
+import Html.Attributes exposing (class, href, src)
 import Html.Events exposing (onClick)
 import List exposing (..)
 import Random exposing (generate)
@@ -111,7 +111,7 @@ update msg model =
 view model =
     div
         [ class "game-container" ]
-        [ mountButton model.buttonResponse
+        [ headerButton model.buttonResponse
         , div
             [ class "cards-container" ]
             [ div
@@ -162,24 +162,32 @@ mountDescriptionCard descriptionCard =
         ]
 
 
+headerButton : Button -> Html.Html Msg
+headerButton buttonResponse =
+    div
+        [ class "button-container" ]
+        [ a
+            [ class "link-project", href "https://github.com/Jciel/memory-game-spanish" ]
+            [ img
+                [ class "github-mark", src "public/images/githubmark.png" ]
+                []
+            ]
+        , mountButton buttonResponse
+        ]
+
+
 mountButton : Button -> Html.Html Msg
 mountButton buttonResponse =
     case buttonResponse of
         Correct ->
-            div
-                [ class "button-container" ]
-                [ button
-                    [ class "button-result btn-success", onClick RemoveCards ]
-                    [ text "Remove Cards" ]
-                ]
+            button
+                [ class "button-result btn-success", onClick RemoveCards ]
+                [ text "Remove Cards" ]
 
         Wrong ->
-            div
-                [ class "button-container" ]
-                [ button
-                    [ class "button-result btn-wrong" ]
-                    [ text "-" ]
-                ]
+            button
+                [ class "button-result btn-wrong" ]
+                [ text "-" ]
 
 
 classActive : CardStatus -> String

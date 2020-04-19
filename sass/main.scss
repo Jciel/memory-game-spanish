@@ -10,6 +10,12 @@ body {
         align-items: center;
         justify-content: center;
 
+        .link-project {
+          padding: 12px;
+          position: absolute;
+          left: 0;
+        }
+
         .button-result {
           border: 13px solid #fff;
           padding: 10px 32px;

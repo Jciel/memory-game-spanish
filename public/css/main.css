@@ -6,6 +6,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center; }
+    body .container .game-container .button-container .link-project {
+      padding: 12px;
+      position: absolute;
+      left: 0; }
     body .container .game-container .button-container .button-result {
       border: 13px solid #fff;
       padding: 10px 32px;
